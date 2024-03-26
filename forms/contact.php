@@ -1,37 +1,37 @@
 <?php
-// Replace contact@example.com with your real receiving email address
-$receiving_email_address = 'nikikstha@gmail.com';
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $subject = $_POST['subject'];
-    $message = $_POST['message'];
-    
-    // Construct email headers
-    $headers = "From: $name <$email>\r\n";
-    $headers .= "Reply-To: $email\r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
-    // Construct email body
-    $body = "
-    <html>
-    <body>
-        <h2>New Message from Contact Form</h2>
-        <p><strong>Name:</strong> $name</p>
-        <p><strong>Email:</strong> $email</p>
-        <p><strong>Subject:</strong> $subject</p>
-        <p><strong>Message:</strong><br>$message</p>
-    </body>
-    </html>";
+require'phpmailer/src/Exception.php';
+require'phpmailer/src/PHPMailer.php';
+require'phpmailer/src/SMTP.php';
 
-    // Send email
-    if (mail($receiving_email_address, $subject, $body, $headers)) {
-        echo "Message sent successfully!";
-    } else {
-        echo "Failed to send message. Please try again later.";
-    }
+if(isset($_POST["send"])){
+    $mail = new PHPMailer(true);
+
+
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'niki.kstha7664@gmail.com';
+    $mail->Password = 'kgmh ettk brpc phvb';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
+
+    $mail->setFrom('niki.kstha7664@gmail.com');
+    $mail->addAddress('nikikstha@gmail.com');
+
+    $mail->isHTML(true);
+
+    $mail->Subject = $_POST["subject"];
+    $mail->Body =$_POST["message"];
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }
+
 ?>
